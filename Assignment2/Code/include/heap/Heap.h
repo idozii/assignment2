@@ -243,7 +243,7 @@ T Heap<T>::pop()
 {
   // YOUR CODE IS HERE
   if (count == 0)
-    throw std::underflow_error("Calling peek with an empty heap.");
+    throw std::underflow_error("Calling to peek with the empty heap.");
   T root = elements[0];
   elements[0] = elements[count - 1];
   count--;
@@ -267,7 +267,7 @@ const T Heap<T>::peek()
 {
   // YOUR CODE IS HERE
   if (count == 0)
-    throw std::underflow_error("Calling peek with an empty heap.");
+    throw std::underflow_error("Calling to peek with the empty heap.");
   return elements[0];
 }
 
