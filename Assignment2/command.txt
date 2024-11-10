@@ -1,0 +1,42 @@
+  ReLU
+g++ -fsanitize=address -std=c++17 -I "./test"  -I "./include" -I "./include/tensor" -I "./include/sformat" -I "./include/ann" -I "./demo" $(find ./src/ann/ -type f -iregex ".*\.cpp") ./src/tensor/*\.cpp main.cpp test/unit_test/layer/unit_test_relu.cpp -o main -DTEST_LAYER
+  Sigmoid
+g++ -fsanitize=address -std=c++17 -I "./test"  -I "./include" -I "./include/tensor" -I "./include/sformat" -I "./include/ann" -I "./demo" $(find ./src/ann/ -type f -iregex ".*\.cpp") ./src/tensor/*\.cpp main.cpp test/unit_test/layer/unit_test_sigmoid.cpp -o main -DTEST_LAYER
+  Tanh
+g++ -fsanitize=address -std=c++17 -I "./test"  -I "./include" -I "./include/tensor" -I "./include/sformat" -I "./include/ann" -I "./demo" $(find ./src/ann/ -type f -iregex ".*\.cpp") ./src/tensor/*\.cpp main.cpp test/unit_test/layer/unit_test_tanh.cpp -o main -DTEST_LAYER
+  Softmax
+g++ -fsanitize=address -std=c++17 -I "./test"  -I "./include" -I "./include/tensor" -I "./include/sformat" -I "./include/ann" -I "./demo" $(find ./src/ann/ -type f -iregex ".*\.cpp") ./src/tensor/*\.cpp main.cpp test/unit_test/layer/unit_test_softmax.cpp -o main -DTEST_LAYER
+  Loss
+g++ -fsanitize=address -std=c++17 -I "./test"  -I "./include" -I "./include/tensor" -I "./include/sformat" -I "./include/ann" -I "./demo" $(find ./src/ann/ -type f -iregex ".*\.cpp") ./src/tensor/*\.cpp main.cpp test/unit_test/loss/unit_test_CrossEntropy.cpp -o main -DTEST_LOSS	
+  Heap, Hash
+g++ -fsanitize=address -fsanitize=undefined -std=c++17 -o main -Iinclude -Itest -Isrc main.cpp test/unit_test/hash/unit_test.cpp test/unit_test/heap/unit_test.cpp -DTEST_HASH
+
+
+
+NOTE:
+$(find ./src/ann/ -type f -iregex "..cpp")
+
+sẽ giống đống .cpp bên dứoi nêu máy bạn ko hiểu phần này thì lấy các lệnh bên dưới
+
+./src/ann/functions.cpp 
+./src/ann/dataset/DSFactory.cpp 
+./src/ann/loss/LossLayer.cpp 
+./src/ann/loss/CrossEntropy.cpp 
+./src/ann/config/Config.cpp
+./src/ann/metrics/IMetrics.cpp
+./src/ann/metrics/ClassMetrics.cpp 
+./src/ann/model/MLPClassifier.cpp 
+./src/ann/model/IModel.cpp 
+./src/ann/optim/AdaParamGroup.cpp 
+./src/ann/optim/SGDParamGroup.cpp 
+./src/ann/optim/SGD.cpp 
+./src/ann/optim/Adagrad.cpp 
+./src/ann/optim/Adam.cpp 
+./src/ann/optim/AdamParamGroup.cpp 
+./src/ann/optim/Optimizer.cpp 
+./src/ann/layer/Softmax.cpp 
+./src/ann/layer/Sigmoid.cpp 
+./src/ann/layer/FCLayer.cpp 
+./src/ann/layer/ReLU.cpp 
+./src/ann/layer/Layer.cpp
+./src/ann/layer/Tanh.cpp
