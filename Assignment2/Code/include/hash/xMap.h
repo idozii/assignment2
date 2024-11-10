@@ -290,25 +290,16 @@ V xMap<K, V>::put(K key, V value)
 template <class K, class V>
 V &xMap<K, V>::get(K key)
 {
-  // Calculate the index using the hash code of the key
   int index = hashCode(key, capacity);
-
-  // Retrieve the list at the calculated index
   DLinkedList<Entry *> &dll = this->table[index];
-
-  // Check if the list is not null and the key exists in the map
   if (!dll.empty() && this->containsKey(key)) 
   {
-    // Iterate through the list to find the entry with the matching key
     for (auto it = dll.begin(); it != dll.end(); it++)
     {
-      // Check if the current entry's key matches the given key
       if (keyEQ((*it)->key, key))
-        return (*it)->value; // Return the value associated with the key
+        return (*it)->value;
     }
   }
-
-  // If the key is not found, throw a KeyNotFound exception
   stringstream os;
   os << "key (" << key << ") is not found";
   throw KeyNotFound(os.str());
@@ -319,32 +310,17 @@ V xMap<K, V>::remove(K key, void (*deleteKeyInMap)(K))
 {
   int index = hashCode(key, capacity);
   V retValue;
-
-  // Retrieve the list at the calculated index
   DLinkedList<Entry *> &dll = this->table[index];
-
-  if (this->containsKey(key))
-  {
-    for (auto it = dll.begin(); it != dll.end(); it++)
-    {
-      if (keyEQ((*it)->key, key))
-      {
-        // Backup the value to return
-        retValue = (*it)->value;
-
-        // Free the key if deleteKeyInMap is not NULL
-        if (deleteKeyInMap)
-          deleteKeyInMap(key);
-
-        // Remove the Entry and free the memory of the Entry
-        dll.removeItem(*it, this->deleteEntry);
-        this->count--;
-        return retValue;
-      }
+  for(auto it = dll.begin(); it != dll.end(); it++){
+    if(keyEQ((*it)->key, key)){
+      retValue = (*it)->value;
+      if(deleteKeyInMap)
+        deleteKeyInMap((*it)->key);
+      dll.removeItem(*it, this->deleteEntry);
+      this->count--;
+      return retValue;
     }
   }
-
-  // Key not found, throw an exception
   stringstream os;
   os << "key (" << key << ") is not found";
   throw KeyNotFound(os.str());
@@ -353,88 +329,56 @@ V xMap<K, V>::remove(K key, void (*deleteKeyInMap)(K))
 template <class K, class V>
 bool xMap<K, V>::remove(K key, V value, void (*deleteKeyInMap)(K), void (*deleteValueInMap)(V))
 {
-  // Calculate the index using the hash code of the key
   int index = this->hashCode(key, this->capacity);
-
-  // Retrieve the list at the calculated index
   DLinkedList<Entry *> &dll = this->table[index];
-
-  // Check if the list is not null
-
-  // Iterate through the list to find the entry with the matching key and value
   for (auto it = dll.begin(); it != dll.end(); it++)
   {
-    // Check if the current entry's key and value match the given key and value
     if (keyEQ((*it)->key, key) && valueEQ((*it)->value, value))
     {
-      // Free the key if deleteKeyInMap is not NULL
-      if (deleteKeyInMap != nullptr)
-        deleteKeyInMap(key);
-
-      // Free the value if deleteValueInMap is not NULL
+      if (deleteKeyInMap)
+        deleteKeyInMap((*it)->key);
       if (deleteValueInMap != nullptr)
-        deleteValueInMap(value);
+        deleteValueInMap((*it)->value);
 
-      // Remove the Entry and free the memory of the Entry
       dll.removeItem(*it, this->deleteEntry);
       this->count--;
-      // Return true indicating the key-value pair was found and removed
       return true;
     }
   }
-
-  // Return false if the key-value pair was not found
   return false;
 }
 
 template <class K, class V>
 bool xMap<K, V>::containsKey(K key)
 {
-  // Calculate the index using the hash code of the key
   int idx = hashCode(key, this->capacity);
-
-  // Retrieve the list at the calculated index
   DLinkedList<Entry *> &dll = this->table[idx];
-
-  // Check if the list is not null
   if(dll.empty()){
     return false;
   }
-  // Iterate through the list to find the entry with the matching key
   for (auto it = dll.begin(); it != dll.end(); it++)
   {
-    // Check if the current entry's key matches the given key
     if (keyEQ((*it)->key, key))
-      return true; // Return true if the key is found
+      return true; 
   }
-
-  // Return false if the key is not found
   return false;
 }
 
 template <class K, class V>
 bool xMap<K, V>::containsValue(V value)
 {
-  // Iterate through each index in the table
   for (int index = 0; index < this->capacity; index++)
   {
-    // Retrieve the list at the current index
     DLinkedList<Entry *> *dll = &(this->table[index]);
-
-    // Check if the list is not null
     if (dll != nullptr)
     {
-      // Iterate through the list to find the entry with the matching value
       for (auto it = dll->begin(); it != dll->end(); it++)
       {
-        // Check if the current entry's value matches the given value
         if (valueEQ((*it)->value, value))
-          return true; // Return true if the value is found
+          return true; 
       }
     }
   }
-
-  // Return false if the value is not found
   return false;
 }
 
