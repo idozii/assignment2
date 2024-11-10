@@ -67,6 +67,10 @@ void AdamParamGroup::register_param(string param_name,
         xt::xarray<double>* ptr_param,
         xt::xarray<double>* ptr_grad){
     //YOUR CODE IS HERE
+    m_pParams->put(param_name, ptr_param);
+    m_pGrads->put(param_name, ptr_grad);
+    m_pFirstMomment->put(param_name, new xt::xarray<double>(ptr_param->shape(), 0.0));
+    m_pSecondMomment->put(param_name, new xt::xarray<double>(ptr_param->shape(), 0.0));
 }
 void AdamParamGroup::register_sample_count(unsigned long long* pCounter){
     m_pCounter = pCounter;
@@ -74,14 +78,27 @@ void AdamParamGroup::register_sample_count(unsigned long long* pCounter){
 
 void AdamParamGroup::zero_grad(){
     //YOUR CODE IS HERE
-    
+    for(auto key: m_pGrads->keys()){
+        xt::xarray<double>* grad = m_pGrads->get(key);
+        *grad = 0;
+    }
 }
 
 void AdamParamGroup::step(double lr){
     //YOUR CODE IS HERE
-    //UPDATE m_pParams:
-    
-    
+    double alpha = lr * sqrt(1 - m_beta2_t) / (1 - m_beta1_t);
+    for(auto key: m_pParams->keys()){
+        xt::xarray<double>* param = m_pParams->get(key);
+        xt::xarray<double>* grad = m_pGrads->get(key);
+        xt::xarray<double>* first_moment = m_pFirstMomment->get(key);
+        xt::xarray<double>* second_moment = m_pSecondMomment->get(key);
+        //UPDATE first_moment:
+        *first_moment = m_beta1 * (*first_moment) + (1 - m_beta1) * (*grad);
+        //UPDATE second_moment:
+        *second_moment = m_beta2 * (*second_moment) + (1 - m_beta2) * xt::square(*grad);
+        //UPDATE param:
+        *param -= alpha * (*first_moment) / (xt::sqrt(*second_moment) + 1e-7);
+    }
     //UPDATE step_idx:
     m_step_idx += 1;
     m_beta1_t *= m_beta1;
