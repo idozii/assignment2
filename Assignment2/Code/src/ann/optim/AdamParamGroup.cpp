@@ -74,6 +74,7 @@ void AdamParamGroup::register_sample_count(unsigned long long* pCounter){
 
 void AdamParamGroup::zero_grad(){
     //YOUR CODE IS HERE
+    
 }
 
 void AdamParamGroup::step(double lr){

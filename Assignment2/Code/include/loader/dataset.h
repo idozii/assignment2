@@ -104,9 +104,6 @@ public:
         }
         xt::xarray<DType> get_data = xt::view(this->data, index, xt::all());
         xt::xarray<LType> get_label;
-        if(label.shape()[0] != data.shape()[0]){
-            throw std::runtime_error("Data and label tensors must have the same size in dimension 0");
-        }
         if(get_label_shape().size()==0){
             get_label = label;
         }

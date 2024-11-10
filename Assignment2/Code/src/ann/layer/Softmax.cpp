@@ -37,14 +37,21 @@ xt::xarray<double> Softmax::forward(xt::xarray<double> Z) {
   return Y;
 }
 
-xt::xarray<double> Softmax::backward(xt::xarray<double> deltaY) {
+xt::xarray<double> Softmax::backward(xt::xarray<double> DY) {
   // TODO YOUR CODE IS HERE
-  xt::xarray<double> Y = this->m_aCached_Y;
-  xt::xarray<double> diag_Y = xt::diag(Y);
-  xt::xarray<double> YTY = xt::linalg::outer(Y, xt::transpose(Y));
-  xt::xarray<double> jacobian = diag_Y - YTY;
-  xt::xarray<double> dY = xt::linalg::dot(deltaY, jacobian);  
-  return dY;
+  xt::xarray<double> Z = xt::xarray<double>::from_shape(this->m_aCached_Y.shape());
+  if (DY.dimension() < 2){
+      xt::xarray<double> jacobian = xt::diag(this->m_aCached_Y) - xt::linalg::outer(this->m_aCached_Y, xt::transpose(this->m_aCached_Y));
+      Z = xt::linalg::dot(jacobian, DY);
+  }
+  else{
+    for (size_t index = 0; index < this->m_aCached_Y.shape()[0]; index++){
+        xt::xarray<double> row = xt::view(this->m_aCached_Y, index, xt::all());
+        xt::xarray<double> jacobian = xt::diag(row) - xt::linalg::outer(row, xt::transpose(row));
+        xt::view(Z, index, xt::all()) = xt::linalg::dot(jacobian, xt::view(DY, index, xt::all()));
+    }
+  }
+  return Z;
 }
 
 string Softmax::get_desc() {

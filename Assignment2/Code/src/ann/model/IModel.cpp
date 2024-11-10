@@ -42,8 +42,7 @@ void IModel::fit(DataLoader<double, double>* pTrainLoader,
       //(1) FORWARD-Pass
       // YOUR CODE IS HERE
       double batch_loss;
-      double_tensor Y;
-      Y = forward(X);
+      double_tensor Y = forward(X);
       batch_loss = m_pLossLayer->forward(Y, t);
       //(2) BACKWARD-Pass
       // YOUR CODE IS HERE

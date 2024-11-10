@@ -26,6 +26,9 @@ Adam::~Adam() {
 
 IParamGroup* Adam::create_group(string name){
     //YOUR CODE IS HERE
-    
+    AdamParamGroup* pGroup = new AdamParamGroup(this->m_beta_1, this->m_beta_2);
+    //  use hash put
+    this->m_pGroupMap->put(name, pGroup);
+    return pGroup;
 }
 
