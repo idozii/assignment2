@@ -231,7 +231,7 @@ xMap<K, V>::xMap(
   this->deleteKeys = deleteKeys;
   this->count = 0;
   this->capacity = 10;
-  table = new DLinkedList<Entry *>[this->capacity];
+  this->table = new DLinkedList<Entry *>[this->capacity];
 }
 
 template <class K, class V>
@@ -273,26 +273,17 @@ V xMap<K, V>::put(K key, V value)
   V retValue = value;
   // YOUR CODE IS HERE
   DLinkedList<Entry *> &dll = this->table[index];
-  bool contain = this->containsKey(key);
-  if (contain)
-  {
-    for (auto it = dll.begin(); it != dll.end(); it++)
-    {
-      if (keyEQ((*it)->key, key))
-      {
-        retValue = (*it)->value;
-        (*it)->value = value;
-        break;
-      }
+  for(auto it = dll.begin(); it != dll.end(); it++){
+    if(keyEQ((*it)->key, key)){
+      retValue = (*it)->value;
+      (*it)->value = value;
+      return retValue;
     }
   }
-  else
-  {
-    Entry *entry = new Entry(key, value);
-    dll.add(entry);
-    this->count++;
-    ensureLoadFactor(this->count);
-  }
+  Entry *entry = new Entry(key, value);
+  dll.add(entry);
+  this->count++;
+  this->ensureLoadFactor(this->count);
   return retValue;
 }
 

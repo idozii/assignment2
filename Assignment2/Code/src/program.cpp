@@ -28,8 +28,8 @@ int main(int argc, char** argv) {
     //case_batch_larger_nsamples();
     
     //Classification:
-    //twoclasses_classification();
-    threeclasses_classification();
+    twoclasses_classification();
+    //threeclasses_classification();
  
     return 0;
 }
